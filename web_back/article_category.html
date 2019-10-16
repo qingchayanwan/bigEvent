@@ -2,34 +2,34 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>文章列表</title>
-    <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/iconfont.css">
-    <link rel="stylesheet" href="css/main.css">
-    <script src="js/jquery-1.12.4.min.js"></script>
-    <script src="js/bootstrap/js/bootstrap.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>文章列表</title>
+  <link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/iconfont.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/jquery-1.12.4.min.js"></script>
+  <script src="js/bootstrap/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="common_title">
-            文章类别管理
-        </div>
-        <div class="container-fluid common_con">
-            <table class="table table-striped table-bordered table-hover mp20 category_table">
-                <thead>
-                    <tr>
-                        <th>名称</th>
-                        <th>Slug</th>
-                        <th class="text-center" width="100">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+  <div class="container-fluid">
+    <div class="common_title">
+      文章类别管理
+    </div>
+    <div class="container-fluid common_con">
+      <table class="table table-striped table-bordered table-hover mp20 category_table">
+        <thead>
+          <tr>
+            <th>名称</th>
+            <th>Slug</th>
+            <th class="text-center" width="100">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <!-- <tr>
                         <td>未分类</td>
                         <td>uncategorized</td>
                         <td class="text-center">
@@ -67,70 +67,239 @@
                                 class="btn btn-info btn-xs">编辑</a>
                             <a href="javascript:deleteTr( 4 );" class="btn btn-danger btn-xs">删除</a>
                         </td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="3" class="text-center">
-                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
-                        </td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+                    </tr> -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-center">
+              <a href="#" id="addBtn" class="btn btn-success" data-target="#addModal">新增分类</a>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
-
-    <div class="modal fade" id="addModal" >
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
-              <h4 class="modal-title">新增分类</h4>
+  </div>
+  <!-- 拟态弹窗部分 -->
+  <div class="modal fade" id="addModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+          <h4 class="modal-title">新增分类</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="recipient-name" class="control-label">分类名称:</label>
+              <input type="text" class="form-control" id="cate_name">
             </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label for="recipient-name" class="control-label">分类名称:</label>
-                  <input type="text" class="form-control" id="recipient-name">
-                </div>
-                <div class="form-group">
-                  <label for="message-text" class="control-label">分类别名:</label>
-                  <input type="text" class="form-control" id="recipient-name">
-                </div>
-              </form>
+            <div class="form-group">
+              <label for="message-text" class="control-label">分类别名:</label>
+              <input type="text" class="form-control" id="cate_slug">
             </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" id="model_shutoff">关闭</button>
-              <button type="button" class="btn btn-primary" id="model_add">新增</button>
-            </div>
-          </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" id="model_shutoff" data-dismiss="modal">关闭</button>
+          <button type="button" class="btn btn-primary" id="model_add">新增</button>
+          <!-- 我们后来添加的按钮 给他身上绑定了事件 -->
+          <!-- <button type="button" class="btn btn-primary" id="model_edit" stye='display: none'>提交编辑</button> -->
+          <button type="button" class="btn btn-primary" style="display:none;" id="modal_edit">提交编辑</button>
         </div>
       </div>
+    </div>
+  </div>
 
-      <script>
-          $('#addModal').modal({
-            show:false,
-            backdrop:false
-          });
+  <!-- <script>
+    $('#addModal').modal({
+      show: false,
+      backdrop: false
+    });
 
-          $('#model_shutoff').click(function(){
-            alert('shutoff');
-            $('#addModal').modal('hide');
-          });
+    $('#model_shutoff').click(function() {
+      alert('shutoff');
+      $('#addModal').modal('hide');
+    });
 
-          $('#model_add').click(function(){
-            alert('add');
-            $('#addModal').modal('hide');
-          });
+    $('#model_add').click(function() {
+      alert('add');
+      $('#addModal').modal('hide');
+    });
 
-          $('.category_table').delegate('a','click',function(){
-              if($(this).hasClass('btn-info')){
-                $('#addModal .modal-title').html('修改分类名称');
-                $('#addModal').modal('show');
-              }
-          })      
-      </script>
-
+    $('.category_table').delegate('a', 'click', function() {
+      if ($(this).hasClass('btn-info')) {
+        $('#addModal .modal-title').html('修改分类名称');
+        $('#addModal').modal('show');
+      }
+    }) 
+  </script>-->
+  <!-- 引入我们所需要的js文件 -->
+  <!-- 引入ajax处理程序的集 -->
+  <script src="./tool/wenzhang.js"></script>
+  <!-- 引入所有的接口文档数据 -->
+  <script src="./tool/base.js"></script>
+  <!-- 引入模板引擎 -->
+  <script src="./js/template-web.js"></script>
+  <!-- 先把模板引擎的数据处理好 -->
+  <script type="text/html" id="category">
+    <!-- 进行模板引擎渲染数据 -->
+    {{ each data v }}
+    <tr>
+      <td>{{ v.name }}</td>
+      <td>{{ v.slug }}</td>
+      <td class="text-center">
+        <!-- 在构建dom元素的时候给他加入一个自定义属性，是为了编辑和删除做准备的 -->
+        <a href="javascript:;" data-id="{{ v.id }}" class="btn btn-info btn-xs edit">编辑</a>
+        <a href="javascript:;" data-id="{{ v.id }}" class="btn btn-danger btn-xs del">删除</a>
+      </td>
+    </tr>
+    {{ /each }}
+  </script>
+  <!-- 我们所做的处理程序 -->
+  <script>
+    //   1: 第一步，先把后台的数据渲染到页面上面
+    wenzhang.getCate({
+      // 利用提前封装好的方法请求ajax数据
+      callback: function(res) {
+        if (res.code === 200) {
+          // 利用模板引擎进行数据渲染
+          var htmlSrc = template('category', res);
+          //   把处理好的数据渲染到表格里面去
+          $('#tbody').html(htmlSrc);
+        }
+      }
+    });
+    // 2: 第二步 数据的添加功能
+    $('#model_add').on('click', function() {
+      // 获取拟态弹框中的内容
+      var name = $("#cate_name").val();
+      var slug = $("#cate_slug").val();
+      //   设置一个判断如果为空则不能够进行添加
+      if (name.trim() === '' || slug.trim() === '') {
+        alert('请正确的添加文件名称和内容!~');
+        // 如果为空则返回该数据不再继续执行
+        return;
+      }
+      //   如果正确的添加了内容则进行数据请求
+      wenzhang.addCate({
+        //   两个参数一个是名一个是内容
+        data: {
+          name: name,
+          slug: slug
+        },
+        //设置回调函数
+        callback: function(res) {
+          if (res.code === 200) {
+            //   如果成功提交了那么利用location.reload进行页面刷新，将最新的数据渲染到页面上
+            location.reload();
+            // 如果失败了说明提交的数据重复了 则弹框提示
+          } else {
+            alert("不可以提交相同的数据!~");
+            return;
+          }
+        }
+      })
+    });
+    //3: 第三步 文章中的删除功能
+    // 利用事件委托的原理给动态添加的元素设置点击事件
+    $('#tbody').on('click', '.del', function() {
+      // 设置判断如果取消则返回不进行操作如果确认则进行数据删除 confirm是确认性弹框
+      if (!confirm('是否确认删除该内容！~')) {
+        return;
+      }
+      //   如果确认数据删除那么进行数据请求
+      // 如果要删除数据需要获取到删除元素的父级元素这样的话页面可以不用重新加载；
+      // 用this的原因是需要删除这个元素的父级元素
+      var $tr = $(this).parents('tr');
+      // 我们在构造dom的是给传入了一个自定义id属性，我们获取到当前这个元素的自定义属性id
+      var id = $(this).data('id');
+      // 写到这里的时候遇到点小bug就是数据不能进行正常的提佳品
+      // 解决方法未知 方正一会自己就好了
+      wenzhang.delCate({
+        // 把上边获取的id当做参数传给服务端
+        data: {
+          id: id
+        },
+        callback: function(res) {
+          // console.log(res);
+          if (res.code === 200) {
+            // 设置回调函数直接删除这个dom元素即可
+            $tr.remove();
+          }
+        }
+      })
+    });
+    // 第四步 编辑文档内容部分
+    // 在创建元素的时候给动态的添加一个类名
+    // 给动态添加的元素加一个动态的点击事件
+    // 也可以使用事件委托
+    $('#tbody').on('click', '.edit', function() {
+      // 编辑数据的时候需要数据展现在拟态弹窗上所有我们要做一下相应的处理
+      // 能拿到当前的元素的内容只能通过我们给的自定义属性来获取
+      var id = $(this).data('id');
+      // 把我们获取到的自定义属性赋值给我们后来添加的按钮上
+      // 因为我们要获取到当前这个文件筐中的内容所有我们要给他一个当前输入框里面的值
+      // 我们取到的这个id值让他们相互对应即可
+      $('#modal_edit').data('id', id);
+      // 获取到当前输入框里面的内容
+      // 通过children方法来获取子级的内容
+      // 先把所有的子级都获取到
+      var $td = $(this).parents('tr').children();
+      // 将获取到的内容动态的添加到拟态弹框的输入框里面
+      $('#cate_name').val($td.eq(0).text());
+      $('#cate_slug').val($td.eq(1).text());
+      // 根据点击的按钮不同把拟态弹框里面的确认删除和提交编辑设置一个显示和隐藏事件
+      $('#addModal').modal('show');
+      $('#modal_edit').show();
+      $('#model_add').hide();
+    });
+    // 2.1 设置一个事件，因为我们底下有个删除功能所以要把两个按钮在不同功能的事件之间来回切换
+    $('#addBtn').on('click', function() {
+      // 因为编辑的时候需要获取到数据到编辑框中，所以编辑框里面是有内容的，解决方法就是把拟态弹框当点击的时候给他清空就好了
+      $("#cate_name").val('');
+      $("#cate_slug").val('');
+      $('#addModal').modal('show');
+      $('#modal_edit').hide();
+      $('#model_add').show();
+    });
+    // 设置提交编辑的点击事件
+    $('#modal_edit').on('click', function() {
+        // 先获取我们之前给他动态添加的自定义属性
+        var id = $(this).data('id');
+        // 获取两个输入框里面的内容，并进行检测
+        console.log(id)
+        var name = $("#cate_name").val();
+        var slug = $("#cate_slug").val();
+        if (name.trim() === '' || slug.trim() === '') {
+          alert("请输入完整的内容!~");
+          return;
+        };
+        // 如果用户修改的信息正确那么进行数据提交
+        wenzhang.editCate({
+          // 参入三个参数，第一个是需要修改那个文件的内容，确认是当前文件
+          // 第二个是名称
+          // 第三个是用户所修改的内容
+          data: {
+            id: id,
+            name: name,
+            slug: slug
+          },
+          callback: function(res) {
+            if (res.code === 200) {
+              //  如果数据修改正确，将进行页面刷新
+              location.reload();
+            } else {
+              alert('后端偷懒了！~');
+              // 如果没有修改成功说明后端偷懒了
+            }
+          }
+        })
+      })
+      // 设置拟态弹框的关闭部分
+      // $('#model_shutoff').on('click', function() {
+      //   $('#addModal').modal('hide');
+      // });
+  </script>
 </body>
 
 </html>
