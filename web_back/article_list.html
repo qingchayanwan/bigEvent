@@ -274,6 +274,8 @@
       window.parent.setMenu(1, 1);
     })
   </script>
+  <!-- 引入jQuery分页插件的文件 -->
+  <script src="./js/jquery.twbsPagination.js"></script>
   <!-- 引入base接口数据文件 -->
   <script src="./tool/base.js"></script>
   <!-- 引入ajax处理文件 -->
@@ -305,22 +307,70 @@
   </script>
   <!-- 进行文件数据请求 -->
   <script>
+    // 设置一个总页数，利用jquery中的分页功能进行分页的设置
+    // 设置一个当前的页码，当前的页码为一；
+    var myPage = 1;
+    var myTotalPage;
     //   使用ajax请求后台数据
     // 1： 功能一，实现页面的基本渲染
-    $.ajax({
-      url: USER_SEARCH,
-      //   data: {
-      //     type: $('#selCategory').val(),
-      //     state: $('#selStatus').val()
-      //   },
-      success: function(res) {
-        if (res.code === 200) {
-          // 通过和模板引擎进行相配合来实现渲染页面
-          var htmlSrc = template('article', res);
-          $('tbody').html(htmlSrc);
+    // 把他们都设置在一个函数内方便调用使用，减少冗余代码；
+    getArice();
+
+    function getArice() {
+      $.ajax({
+        url: USER_SEARCH,
+        data: {
+          page: myPage
+        },
+        success: function(res) {
+          if (res.code === 200) {
+            // 通过和模板引擎进行相配合来实现渲染页面
+            var htmlSrc = template('article', res);
+            $('tbody').html(htmlSrc);
+            // 在我们获取数据的时候还有一条关于页码的数据，我们给他用个变量保存起来
+            //  我们在一开始获取数据的时候就应该把这个页码数给保存起来
+            var totPage = res.totalPage;
+            // totPage这个变量是我们获取到数据所有的页码数
+            // console.log(totPage)；
+            // 设置一个关键性判断，如果页面数相同则不用再刷新页面显示，这期间有点毛病所以只能这么写；
+            if (totPage === myTotalPage) {
+              // - 如果上一次和当前的总页数一致，同时上一次又点击了除1以外的其他页码
+              //   - 会导致页码无法更新为1，所以就不进行改进了
+              return;
+            }
+            //  - 如果页数不同，将当前的最新页号设置给全局变量myTotalPage保存
+            myTotalPage = totPage;
+            // twbsPagination这个方法是jQuery分页插件对象
+            // twbsPagination('destroy')覆盖之前的数据，更新新的数据，先删除旧的，再设置新的
+            $('.pagination').twbsPagination('destroy');
+            $('.pagination').twbsPagination({
+              // 分页部分的总页数
+
+              totalPages: totPage,
+              // visiblePages固定写法，就是每次可显示多少个页面
+              visiblePages: 5,
+              // 首页尾页下一页和上一页
+              // first: '首页',
+              // last: '尾页',
+              // prev: '上一页',
+              // next: '下一页',
+              first: '首页',
+              last: '尾页',
+              prev: '上一页',
+              next: '下一页',
+              // 获取到需要分页的标签元素，给他们设置点击事件，固定写法
+              onPageClick: function(event, page) {
+                // page代表当前点击的页码，就是以上设置的页码，数值类型
+                // 把页面数当做参数传递，传递给服务器然后再次调用改函数获取相应的数据
+                myPage = page;
+                // 再次调用该函数
+                getArice();
+              }
+            })
+          }
         }
-      }
-    });
+      });
+    }
 
     // 1.1 ： 从后台拿到数据渲染给下拉框
     wenzhang.getCate({
