@@ -53,7 +53,7 @@
             <th class="text-center" width="100">操作</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="tbody">
 
 
 
@@ -248,7 +248,7 @@
 
         </tbody>
       </table>
-
+      <!-- 分页部分 -->
       <div class="row text-center">
         <ul class="pagination pagination-sm">
           <li class="page-item first disabled"><a href="#" class="page-link">首页</a></li>
@@ -267,13 +267,34 @@
 
     </div>
   </div>
-
+  <!-- 拟态弹框部分，如果要用拟态弹框必须要引入框架js -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">提示信息！~</h4>
+        </div>
+        <!-- 模态框的内容区域 -->
+        <div class="modal-body">
+          是否确认删除!~
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" id="removeYes">确定删除</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     // 设置左侧菜单
     $('#release_btn').click(function() {
       window.parent.setMenu(1, 1);
     })
   </script>
+  <!-- 引入bootstrap框架 -->
+  <script src="./js/bootstrap/js/bootstrap.min.js"></script>
   <!-- 引入jQuery分页插件的文件 -->
   <script src="./js/jquery.twbsPagination.js"></script>
   <!-- 引入base接口数据文件 -->
@@ -292,8 +313,9 @@
       <td>{{v.type}}</td>
       <td class="text-center">{{v.data}}</td>
       <td class="text-center">{{v.state}}</td>
-      <td class="text-center"><a href="post-edit.html?id=995" class="btn btn-default btn-xs">编辑</a>
-        <a href="javascript:deleteTr( 995 );" class="btn btn-danger btn-xs">删除</a>
+      <td class="text-center">
+        <a href="javascript:;" class="btn btn-default btn-xs" data-id="{{ v.id }}" id="bianji">编辑</a>
+        <a href="javascript:;" class="btn btn-danger btn-xs" data-id="{{ v.id }}" id="remove">删除</a>
       </td>
     </tr>
     <!-- 再用闭合标签给闭合一下 -->
@@ -405,6 +427,34 @@
             $('tbody').html(htmlSrc);
           }
         }
+      })
+    });
+    // 功能三：实现数据的删除功能;
+    // 创建一个全局变量
+    var myId;
+    // 可以通过创建全局变量的方法将取到的当前id值保存起来，也可以实现点击事件嵌套
+    $('#tbody').on('click', '#remove', function() {
+
+      // 把这个变量赋值给这个全局变量id
+      myId = $(this).data('id');
+      //  弹出拟态弹框
+      $('#myModal').modal('show');
+      // 如果确认删除的话进行数据请求进行删除
+      $("#removeYes").on('click', function() {
+        // 获取到id后进行数据请求
+        wenzhang.delPinglun({
+          // 把这个id在、当做参数进行传递
+          data: {
+            id: myId
+          },
+          callback: function(res) {
+            // 如果发送请求成功则进行刷新页面
+            if (res.code === 200) {
+              // 进行页面刷新
+              location.reload();
+            }
+          }
+        })
       })
     });
   </script>

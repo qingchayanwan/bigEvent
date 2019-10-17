@@ -35,5 +35,13 @@ var wenzhang = {
       data: opations.data,
       success: opations.callback
     })
+  },
+  // 用来管理删除文章评论的数据接口
+  delPinglun: function(opations) {
+    $.ajax({
+      url: USER_DELETE,
+      data: opations.data,
+      success: opations.callback
+    })
   }
 }
